@@ -5,6 +5,7 @@
 
 
 const { Events } = require('discord.js');
+const fileAnalyzer = require('../features/fileAnalyzer');
 
 module.exports = async (client) => {
     client.on(Events.MessageCreate, async (message) => {
@@ -12,5 +13,6 @@ module.exports = async (client) => {
         if (message.channel.type === 'DM') return;
 
 
+        fileAnalyzer.analyzeFile(message);
     });
 }

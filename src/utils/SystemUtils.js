@@ -16,12 +16,36 @@ const octokit = new Octokit({
 
 
 exports.sendCommitRequest = sendCommitRequest
-exports.downloadFileInMemory = downloadFileToMemory
+exports.downloadFileInMemory = downloadFileInMemory
 exports.calculateSHA256 = calculateSHA256
 exports.getUrlContent = getUrlContent
 exports.getElementFromHtml = getElementFromHtml
 exports.extractTextFileFromJar = extractTextFileFromJar
 exports.getData = getData
+exports.compareVersions = compareVersions
+
+
+/*
+* @param {string} version1
+* @param {string} version2
+* @returns {number} 1 if version1 is newer, -1 if version2 is newer, 0 if they are the same
+*/
+function compareVersions(version1, version2) {
+    const v1 = version1.split(".");
+    const v2 = version2.split(".");
+
+    const len = Math.max(v1.length, v2.length);
+
+    for (let i = 0; i < len; i++) {
+        const a = parseInt(v1[i]) || 0;
+        const b = parseInt(v2[i]) || 0;
+
+        if (a > b) return 1;
+        if (a < b) return -1;
+    }
+
+    return 0;
+}
 
 /*
 * @param {string} path
@@ -110,7 +134,7 @@ async function sendCommitRequest(path, commitName, commitAuthor, content, sha) {
 }
 
 
-async function downloadFileToMemory(url) {
+async function downloadFileInMemory(url) {
     try {
         const response = await fetch(url);
 
