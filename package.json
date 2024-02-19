@@ -27,6 +27,9 @@
     "unzipper": "^0.10.14"
   },
   "devDependencies": {
+    "@types/node": "^20.11.19",
+    "ts-node": "^10.9.2",
+    "tsc": "^2.0.4",
     "typescript": "^5.3.3"
   }
 }

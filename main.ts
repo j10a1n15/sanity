@@ -4,8 +4,13 @@
 //
 
 
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
-const client = new Client({
+import { Client, GatewayIntentBits, Partials } from "discord.js";
+import loader from "./src/events/loader";
+import ExtendedClient from "./src/types/ExtendedClient";
+require('dotenv').config();
+
+
+const client: ExtendedClient = new Client({
   intents: [
     GatewayIntentBits.DirectMessageReactions,
     GatewayIntentBits.DirectMessages,
@@ -31,10 +36,11 @@ const client = new Client({
     Partials.User,
   ],
 });
-require('dotenv').config();
+
+client.commands = new Map();
 
 client.on("ready", () => {
-  require("./src/events/loader")(client);
+  loader(client);
 });
 
 client.login(process.env.TOKEN);
