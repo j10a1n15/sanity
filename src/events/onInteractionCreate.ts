@@ -4,9 +4,10 @@
 //
 
 
-const { Events } = require('discord.js');
+import { Events } from "discord.js";
+import ExtendedClient from "../types/ExtendedClient";
 
-module.exports = async (client) => {
+export default async (client: ExtendedClient): Promise<void> => {
     client.on(Events.InteractionCreate, async (interaction) => {
         if (!interaction.isCommand()) return;
         // Get the command from the collection
@@ -25,4 +26,4 @@ module.exports = async (client) => {
             await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
         }
     });
-}
+};
