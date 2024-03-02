@@ -4,13 +4,14 @@
 //
 
 
-const { SlashCommandBuilder } = require("discord.js");
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import ExtendedClient from "../types/ExtendedClient";
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Shows the bot's ping."),
-    async run(client, interaction) {
+    async run(client: ExtendedClient, interaction: ChatInputCommandInteraction) {
         await interaction.reply(`Pong! ${client.ws.ping}ms.`);
     }
 }

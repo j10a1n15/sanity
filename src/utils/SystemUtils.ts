@@ -4,32 +4,22 @@
 //
 
 
-const { Octokit } = require('@octokit/rest');
-const { JSDOM } = require('jsdom');
-const config = require("../config/config.json");
-const crypto = require('crypto');
-const JSZip = require("jszip")
+import { Octokit } from '@octokit/rest';
+import { JSDOM } from 'jsdom';
+import crypto from 'crypto';
+import JSZip from 'jszip';
 
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN
 });
 
-
-exports.sendCommitRequest = sendCommitRequest
-exports.downloadFileInMemory = downloadFileToMemory
-exports.calculateSHA256 = calculateSHA256
-exports.getUrlContent = getUrlContent
-exports.getElementFromHtml = getElementFromHtml
-exports.extractTextFileFromJar = extractTextFileFromJar
-exports.getData = getData
-
-/*
+/**
 * @param {string} path
 * @param {string} owner
 * @param {string} repo
-* @returns {object} {json, sha}
+* @returns 
 */
-async function getData(path, owner, repo) {
+export async function getData(path: string, owner: string, repo: string): Promise<any> {
     try {
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: owner,
@@ -44,11 +34,15 @@ async function getData(path, owner, repo) {
     }
     catch (error) {
         console.error('Error fetching or decoding file content:', error);
-        throw error; // Re-throw the error to signal that something went wrong
+        throw error;
     }
 }
 
-async function getUrlContent(url) {
+/**
+ * @param {string} url 
+ * @returns {string | null} The HTML content of the website or null if an error occurred
+ */
+export async function getUrlContent(url: string) {
     try {
         const response = await fetch(url);
 
@@ -64,9 +58,14 @@ async function getUrlContent(url) {
     }
 }
 
-function getElementFromHtml(htmlCode, className) {
+/**
+ * @param htmlCode 
+ * @param className 
+ * @returns 
+ */
+export async function getElementFromHtml(htmlCode: string, className: string) {
     const dom = new JSDOM(htmlCode);
-    const document = dom.window.document;
+    const document = dom.window._document;
 
     // Find the title element using its class name
     const titleElement = document.querySelector(className);
@@ -80,7 +79,7 @@ function getElementFromHtml(htmlCode, className) {
 }
 
 
-async function sendCommitRequest(path, commitName, commitAuthor, content, sha) {
+export async function sendCommitRequest(path: string, commitName: string, commitAuthor: string, content: string, sha: string) {
     // Creates a request to send to github
     const owner = process.env.OWNER;
     const repo = process.env.REPO;
@@ -109,7 +108,7 @@ async function sendCommitRequest(path, commitName, commitAuthor, content, sha) {
 }
 
 
-async function downloadFileToMemory(url) {
+export async function downloadFileToMemory(url: string) {
     try {
         const response = await fetch(url);
 
@@ -125,7 +124,7 @@ async function downloadFileToMemory(url) {
     }
 }
 
-async function calculateSHA256(fileData) {
+export async function calculateSHA256(fileData: string) {
     // Convert the file data (Blob) to an Uint8Array
     const dataUint8Array = await new Response(fileData).arrayBuffer();
 
@@ -139,7 +138,7 @@ async function calculateSHA256(fileData) {
     return hashHex;
 }
 
-function extractTextFileFromJar(jarBuffer, textFileName) {
+export function extractTextFileFromJar(jarBuffer, textFileName) {
     return JSZip.loadAsync(jarBuffer)
         .then(zip => {
             if (zip.files[textFileName]) {
